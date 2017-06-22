@@ -1,34 +1,54 @@
-## 3.4.0 (YYYY-MM-DD)
+## 3.5.0 (YYYY-MM-DD)
 
 ### Breaking Changes
 
+### Deprecated
+
 ### Enhancements
 
-* [ObjectServer] Added support for Sync Progress Notifications through `SyncSession.addDownloadProgressListener(ProgressMode, ProgressListener)` and `SyncSession.addUploadProgressListener(ProgressMode, ProgressListener)` (#4104).
-* Added support for querying inverse relationships (#2904).
-* Moved inverse relationships out of beta stage.
-* Added `Realm.getDefaultConfiguration()` (#4725).
 * Added `RealmObject.getConfiguration()` and `static RealmObject.getConfiguration(RealmModel)` (#4720).
 
 ### Bug Fixes
 
 ### Internal
 
-* Upgraded to Realm Sync 1.9.1
-* Upgraded to Realm Core 2.8.0
+### Credits
 
-## 3.3.3 (YYYY-MM-DD)
+
+## 3.4.0 (2017-06-22)
 
 ### Breaking Changes
 
+* [ObjectServer] Updated protocol version to 18 which is only compatible with ROS > 1.6.0.
+
+### Deprecated
+
+* `RealmSchema.close()` and `RealmObjectSchema.close()`. They don't need to be closed manually. They were added to the public API by mistake.
+
 ### Enhancements
+
+* [ObjectServer] Added support for Sync Progress Notifications through `SyncSession.addDownloadProgressListener(ProgressMode, ProgressListener)` and `SyncSession.addUploadProgressListener(ProgressMode, ProgressListener)` (#4104).
+* [ObjectServer] Added `SyncSession.getState()` (#4784).
+* Added support for querying inverse relationships (#2904).
+* Moved inverse relationships out of beta stage.
+* Added `Realm.getDefaultConfiguration()` (#4725).
 
 ### Bug Fixes
 
+* [ObjectServer] Fixed a bug which may crash when the JNI local reference limitation was reached on sync client thread.
+* [ObjectServer] Retrying connections with exponential backoff, when encountering `ConnectException` (#4310).
 * When converting nullable BLOB field to required, `null` values should be converted to `byte[0]` instead of `byte[1]`.
 * Fixed a bug which may cause duplicated primary key values when migrating a nullable primary key field to not nullable. `RealmObjectSchema.setRequired()` and `RealmObjectSchema.setNullable()` will throw when converting a nullable primary key field with null values stored to a required primary key field.
 
 ### Internal
+
+* Upgraded to Realm Sync 1.10.1
+* Upgraded to Realm Core 2.8.4
+
+### Credits
+
+* Thanks to Anis Ben Nsir (@abennsir) for upgrading Roboelectric in the unitTestExample (#4698).
+
 
 ## 3.3.2 (2017-06-09)
 
