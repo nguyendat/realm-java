@@ -732,6 +732,9 @@ public class RealmConfiguration {
                 if (deleteRealmIfMigrationNeeded) {
                     throw new IllegalStateException("'deleteRealmIfMigrationNeeded()' and read-only Realms cannot be combined");
                 }
+                if (compactOnLaunch != null) {
+                    throw new IllegalStateException("'compactOnLaunch()' and read-only Realms cannot be combined");
+                }
             }
 
             if (rxFactory == null && isRxJavaAvailable()) {
