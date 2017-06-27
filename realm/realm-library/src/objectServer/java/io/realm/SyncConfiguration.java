@@ -119,7 +119,8 @@ public class SyncConfiguration extends RealmConfiguration {
                 schemaMediator,
                 rxFactory,
                 initialDataTransaction,
-                readOnly
+                readOnly,
+                null
         );
 
         this.user = user;

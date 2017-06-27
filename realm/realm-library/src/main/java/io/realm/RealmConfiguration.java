@@ -97,6 +97,7 @@ public class RealmConfiguration {
     private final RxObservableFactory rxObservableFactory;
     private final Realm.Transaction initialDataTransaction;
     private final boolean readOnly;
+    private final CompactOnLaunchCallback compactOnLaunch;
 
     // We need to enumerate all parameters since SyncConfiguration and RealmConfiguration supports different
     // subsets of them.
@@ -112,7 +113,8 @@ public class RealmConfiguration {
             RealmProxyMediator schemaMediator,
             RxObservableFactory rxObservableFactory,
             Realm.Transaction initialDataTransaction,
-            boolean readOnly) {
+            boolean readOnly,
+            CompactOnLaunchCallback compactOnLaunch) {
         this.realmDirectory = realmDirectory;
         this.realmFileName = realmFileName;
         this.canonicalPath = canonicalPath;
@@ -126,6 +128,7 @@ public class RealmConfiguration {
         this.rxObservableFactory = rxObservableFactory;
         this.initialDataTransaction = initialDataTransaction;
         this.readOnly = readOnly;
+        this.compactOnLaunch = compactOnLaunch;
     }
 
     public File getRealmDirectory() {
@@ -190,6 +193,10 @@ public class RealmConfiguration {
      */
     String getAssetFilePath() {
         return assetFilePath;
+    }
+
+    public CompactOnLaunchCallback getCompactOnLaunch() {
+        return compactOnLaunch;
     }
 
     /**
@@ -271,6 +278,7 @@ public class RealmConfiguration {
             return false;
         }
         if (readOnly != that.readOnly) { return false; }
+        if (compactOnLaunch != null ? !compactOnLaunch.equals(that.compactOnLaunch) : that.compactOnLaunch != null) { return false; }
 
         return schemaMediator.equals(that.schemaMediator);
     }
@@ -290,6 +298,7 @@ public class RealmConfiguration {
         result = 31 * result + (rxObservableFactory != null ? rxObservableFactory.hashCode() : 0);
         result = 31 * result + (initialDataTransaction != null ? initialDataTransaction.hashCode() : 0);
         result = 31 * result + (readOnly ? 1 : 0);
+        result = 31 * result + (compactOnLaunch != null ? compactOnLaunch.hashCode() : 0);
 
         return result;
     }
@@ -364,6 +373,8 @@ public class RealmConfiguration {
         stringBuilder.append("schemaMediator: ").append(schemaMediator);
         stringBuilder.append("\n");
         stringBuilder.append("readOnly: ").append(readOnly);
+        stringBuilder.append("\n");
+        stringBuilder.append("compactOnLaunch: ").append(compactOnLaunch);
 
         return stringBuilder.toString();
     }
@@ -420,6 +431,7 @@ public class RealmConfiguration {
         private RxObservableFactory rxFactory;
         private Realm.Transaction initialDataTransaction;
         private boolean readOnly;
+        private CompactOnLaunchCallback compactOnLaunch;
 
         /**
          * Creates an instance of the Builder for the RealmConfiguration.
@@ -450,6 +462,7 @@ public class RealmConfiguration {
             this.deleteRealmIfMigrationNeeded = false;
             this.durability = SharedRealm.Durability.FULL;
             this.readOnly = false;
+            this.compactOnLaunch = null;
             if (DEFAULT_MODULE != null) {
                 this.modules.add(DEFAULT_MODULE);
             }
@@ -670,6 +683,11 @@ public class RealmConfiguration {
             return this;
         }
 
+        public Builder compactOnLaunch(CompactOnLaunchCallback compactOnLaunch) {
+            this.compactOnLaunch = compactOnLaunch;
+            return this;
+        }
+
         private void addModule(Object module) {
             if (module != null) {
                 checkModule(module);
@@ -732,7 +750,8 @@ public class RealmConfiguration {
                     createSchemaMediator(modules, debugSchema),
                     rxFactory,
                     initialDataTransaction,
-                    readOnly
+                    readOnly,
+                    compactOnLaunch
             );
         }
 
