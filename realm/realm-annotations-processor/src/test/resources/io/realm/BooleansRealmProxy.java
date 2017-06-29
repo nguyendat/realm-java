@@ -9,6 +9,8 @@ import io.realm.exceptions.RealmMigrationNeededException;
 import io.realm.internal.ColumnInfo;
 import io.realm.internal.LinkView;
 import io.realm.internal.OsObject;
+import io.realm.internal.OsObjectSchemaInfo;
+import io.realm.internal.Property;
 import io.realm.internal.RealmObjectProxy;
 import io.realm.internal.Row;
 import io.realm.internal.SharedRealm;
@@ -29,7 +31,7 @@ import org.json.JSONObject;
 
 @SuppressWarnings("all")
 public class BooleansRealmProxy extends some.test.Booleans
-    implements RealmObjectProxy, BooleansRealmProxyInterface {
+        implements RealmObjectProxy, BooleansRealmProxyInterface {
 
     static final class BooleansColumnInfo extends ColumnInfo {
         long doneIndex;
@@ -68,6 +70,7 @@ public class BooleansRealmProxy extends some.test.Booleans
 
     private BooleansColumnInfo columnInfo;
     private ProxyState<some.test.Booleans> proxyState;
+    private static final OsObjectSchemaInfo expectedObjectSchemaInfo = createExpectedObjectSchemaInfo();
     private static final List<String> FIELD_NAMES;
     static {
         List<String> fieldNames = new ArrayList<String>();
@@ -184,16 +187,17 @@ public class BooleansRealmProxy extends some.test.Booleans
         proxyState.getRow$realm().setBoolean(columnInfo.anotherBooleanIndex, value);
     }
 
-    public static RealmObjectSchema createRealmObjectSchema(RealmSchema realmSchema) {
-        if (realmSchema.contains("Booleans")) {
-            return realmSchema.get("Booleans");
-        }
-        RealmObjectSchema realmObjectSchema = realmSchema.create("Booleans");
-        realmObjectSchema.add("done", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        realmObjectSchema.add("isReady", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        realmObjectSchema.add("mCompleted", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        realmObjectSchema.add("anotherBoolean", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        return realmObjectSchema;
+    private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("Booleans");
+        builder.addProperty("done", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("isReady", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("mCompleted", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("anotherBoolean", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        return builder.build();
+    }
+
+    public static OsObjectSchemaInfo getExpectedObjectSchemaInfo() {
+        return expectedObjectSchemaInfo;
     }
 
     public static BooleansColumnInfo validateTable(SharedRealm sharedRealm, boolean allowExtraColumns) {
@@ -273,7 +277,7 @@ public class BooleansRealmProxy extends some.test.Booleans
 
     @SuppressWarnings("cast")
     public static some.test.Booleans createOrUpdateUsingJsonObject(Realm realm, JSONObject json, boolean update)
-        throws JSONException {
+            throws JSONException {
         final List<String> excludeFields = Collections.<String> emptyList();
         some.test.Booleans obj = realm.createObjectInternal(some.test.Booleans.class, true, excludeFields);
         if (json.has("done")) {
@@ -310,7 +314,7 @@ public class BooleansRealmProxy extends some.test.Booleans
     @SuppressWarnings("cast")
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static some.test.Booleans createUsingJsonStream(Realm realm, JsonReader reader)
-        throws IOException {
+            throws IOException {
         some.test.Booleans obj = new some.test.Booleans();
         reader.beginObject();
         while (reader.hasNext()) {
@@ -396,7 +400,7 @@ public class BooleansRealmProxy extends some.test.Booleans
         Table table = realm.getTable(some.test.Booleans.class);
         long tableNativePtr = table.getNativePtr();
         BooleansColumnInfo columnInfo = (BooleansColumnInfo) realm.schema.getColumnInfo(some.test.Booleans.class);
-        long rowIndex = OsObject.createRow(realm.sharedRealm, table);
+        long rowIndex = OsObject.createRow(table);
         cache.put(object, rowIndex);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.doneIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$done(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.isReadyIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$isReady(), false);
@@ -419,7 +423,7 @@ public class BooleansRealmProxy extends some.test.Booleans
                 cache.put(object, ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex());
                 continue;
             }
-            long rowIndex = OsObject.createRow(realm.sharedRealm, table);
+            long rowIndex = OsObject.createRow(table);
             cache.put(object, rowIndex);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.doneIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$done(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.isReadyIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$isReady(), false);
@@ -435,7 +439,7 @@ public class BooleansRealmProxy extends some.test.Booleans
         Table table = realm.getTable(some.test.Booleans.class);
         long tableNativePtr = table.getNativePtr();
         BooleansColumnInfo columnInfo = (BooleansColumnInfo) realm.schema.getColumnInfo(some.test.Booleans.class);
-        long rowIndex = OsObject.createRow(realm.sharedRealm, table);
+        long rowIndex = OsObject.createRow(table);
         cache.put(object, rowIndex);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.doneIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$done(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.isReadyIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$isReady(), false);
@@ -458,7 +462,7 @@ public class BooleansRealmProxy extends some.test.Booleans
                 cache.put(object, ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex());
                 continue;
             }
-            long rowIndex = OsObject.createRow(realm.sharedRealm, table);
+            long rowIndex = OsObject.createRow(table);
             cache.put(object, rowIndex);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.doneIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$done(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.isReadyIndex, rowIndex, ((BooleansRealmProxyInterface) object).realmGet$isReady(), false);
